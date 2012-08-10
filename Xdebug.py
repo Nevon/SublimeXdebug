@@ -466,7 +466,7 @@ class XdebugContinueCommand(sublime_plugin.TextCommand):
 
         if (res.getAttribute('status') == 'break'):
             # TODO stack_get
-            protocol.send('context_get')
+            protocol.send('context_get -c 1')
             res = protocol.read().firstChild
             result = ''
 
