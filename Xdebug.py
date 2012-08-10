@@ -408,9 +408,9 @@ class XdebugCommand(sublime_plugin.TextCommand):
             original_layout = window.get_layout()
             debug_view = window.active_view()
             window.set_layout({
-                "cols": [0.0, 0.5, 1.0],
+                "cols": [0.0, 0.3, 0.6, 1.0],
                 "rows": [0.0, 0.7, 1.0],
-                "cells": [[0, 0, 2, 1], [0, 1, 1, 2], [1, 1, 2, 2]]
+                "cells": [[0, 0, 3, 1], [0, 1, 1, 2], [1, 1, 2, 2], [2, 1, 3, 2]]
             })
 
         if command == 'xdebug_clear':
@@ -726,8 +726,11 @@ def add_debug_info(name, data):
     if name == 'context':
         group = 1
         fullName = "Xdebug Context"
-    if name == 'stack':
+    if name == 'global':
         group = 2
+        fullName = "Xdebug Global"
+    if name == 'stack':
+        group = 3
         fullName = "Xdebug Stack"
 
     for v in window.views():
