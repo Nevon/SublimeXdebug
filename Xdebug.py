@@ -466,7 +466,7 @@ class XdebugContinueCommand(sublime_plugin.TextCommand):
 
         if (res.getAttribute('status') == 'break'):
             # TODO stack_get
-            protocol.send('context_get -c 1')
+            protocol.send('context_get')
             res = protocol.read().firstChild
             result = ''
 
@@ -726,11 +726,8 @@ def add_debug_info(name, data):
     if name == 'context':
         group = 1
         fullName = "Xdebug Context"
-    if name == 'global':
-        group = 2
-        fullName = "Xdebug Global"
     if name == 'stack':
-        group = 3
+        group = 2
         fullName = "Xdebug Stack"
 
     for v in window.views():
