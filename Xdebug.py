@@ -466,6 +466,7 @@ class XdebugContinueCommand(sublime_plugin.TextCommand):
 
         if (res.getAttribute('status') == 'break'):
             # TODO stack_get
+            # Get local vars
             protocol.send('context_get')
             res = protocol.read().firstChild
             result = ''
@@ -492,6 +493,34 @@ class XdebugContinueCommand(sublime_plugin.TextCommand):
 
             result = getValues(res)
             add_debug_info('context', result)
+
+            # Get global vars
+            protocol.send('context_get -c 1')
+            res = protocol.read().firstChild
+            result = ''
+
+            def getValues(node):
+                result = unicode('')
+                for child in node.childNodes:
+                    if child.nodeName == 'property':
+                        propName = unicode(child.getAttribute('fullname'))
+                        propType = unicode(child.getAttribute('type'))
+                        propValue = None
+                        try:
+                            propValue = unicode(' '.join(base64.b64decode(t.data) for t in child.childNodes if t.nodeType == t.TEXT_NODE or t.nodeType == t.CDATA_SECTION_NODE))
+                        except:
+                            propValue = unicode(' '.join(t.data for t in child.childNodes if t.nodeType == t.TEXT_NODE or t.nodeType == t.CDATA_SECTION_NODE))
+                        if propName:
+                            if propName.lower().find('password') != -1:
+                                propValue = unicode('*****')
+                            result = result + unicode(propName + ' [' + propType + '] = ' + str(propValue) + '\n')
+                            result = result + getValues(child)
+                            if xdebug_current:
+                                xdebug_current.add_context_data(propName, propType, propValue)
+                return result
+
+            result = getValues(res)
+            add_debug_info('global', result)
             if xdebug_current:
                 xdebug_current.on_selection_modified()
 
@@ -729,6 +758,9 @@ def add_debug_info(name, data):
     if name == 'stack':
         group = 2
         fullName = "Xdebug Stack"
+    if name == 'global':
+        group = 3
+        fullName = "Xdebug Global"
 
     for v in window.views():
         if v.name() == fullName:
