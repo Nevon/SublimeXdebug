@@ -410,7 +410,7 @@ class XdebugCommand(sublime_plugin.TextCommand):
             window.set_layout({
                 "cols": [0.0, 0.3, 0.6, 1.0],
                 "rows": [0.0, 0.7, 1.0],
-                "cells": [[0, 0, 3, 1], [0, 1, 1, 2], [1, 1, 2, 2], [2, 1, 3, 2]]
+                "cells": [[0, 0, 3, 1], [0, 1, 1, 2], [1.3, 1, 2, 2], [2, 1, 3, 2]]
             })
 
         if command == 'xdebug_clear':
