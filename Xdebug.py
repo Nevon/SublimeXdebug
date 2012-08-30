@@ -495,6 +495,7 @@ class XdebugContinueCommand(sublime_plugin.TextCommand):
             add_debug_info('context', result)
 
             # Get global vars
+            protocol.send('feature_set -n max_depth -v 8')
             protocol.send('context_get -c 1')
             res = protocol.read().firstChild
             result = ''
